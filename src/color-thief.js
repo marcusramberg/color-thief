@@ -50,6 +50,11 @@ CanvasImage.prototype.getImageData = function () {
     return this.context.getImageData(0, 0, this.width, this.height);
 };
 
+CanvasImage.prototype.getImageDataCrop = function (x,y,w,h) {
+    return this.context.getImageData(0, 0, this.width, this.height);
+};
+
+
 CanvasImage.prototype.removeCanvas = function () {
     this.canvas.parentNode.removeChild(this.canvas);
 };
@@ -94,7 +99,7 @@ ColorThief.prototype.getColor = function(sourceImage, quality) {
  *
  *
  */
-ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
+ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality,x,y,w,h) {
 
     if (typeof colorCount === 'undefined') {
         colorCount = 10;
@@ -105,7 +110,13 @@ ColorThief.prototype.getPalette = function(sourceImage, colorCount, quality) {
 
     // Create custom CanvasImage object
     var image      = new CanvasImage(sourceImage);
-    var imageData  = image.getImageData();
+    var imageData
+    if (typeof x === 'undefined') {
+      imageData  = image.getImageData();
+    }
+    else {
+      imageData = image.getImageDataCrop(x,y,w,h);
+    }
     var pixels     = imageData.data;
     var pixelCount = image.getPixelCount();
 
